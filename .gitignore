@@ -1,0 +1,30 @@
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.o
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dll
+
+# Compiled Static libraries
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+
+# Hidden
+.project
+.cproject
+.settings/
+.metadata/
+
+
