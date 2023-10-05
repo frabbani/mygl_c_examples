@@ -1,6 +1,6 @@
 
-#define DISP_W  800
-#define DISP_H  450
+#define DISP_W  1280
+#define DISP_H  720
 //#define CENTERED
 #define NOFRAME
 
@@ -327,16 +327,18 @@ void MySDL_draw(){
   MyGL_bindSamplers();
   mygl->W_matrix = MyGL_mat4World( MyGL_vec3( -1.5f, 1.0f, 1.5f ), MyGL_vec3R, MyGL_vec3L , MyGL_vec3U );
 
-  col.value = 0xffffffff;
-  mygl->primitive = MYGL_QUADS;
-  mygl->numPrimitives = MyGL_streamAsciiCharSet( "lemonmilk", "www.youtube.com/faisal_who", col,
-                                                 MyGL_vec3( 0.4f, 0.0f, -2.4f ), MyGL_vec2( 0.1f, 0.1f ), 0.01f );
-
   mygl->W_matrix = MyGL_mat4Identity;
   mygl->V_matrix = MyGL_mat4Identity;
   mygl->P_matrix = MyGL_mat4Ortho( 5, 5, 0.01f, 1000.0f );
-  MyGL_drawStreaming( "Position, Color, UV0" );
 
+  col.value = 0xffffffff;
+  mygl->primitive = MYGL_QUADS;
+  mygl->numPrimitives = MyGL_streamAsciiCharSet( "lemonmilk", "www.youtube.com/faisal_who", col,
+                                                 MyGL_vec3( 0.4f, 1.0f, -2.1f ), MyGL_vec2( 0.1f, 0.1f ), 0.01f );
+  MyGL_drawStreaming( "Position, Color, UV0" );
+  mygl->numPrimitives = MyGL_streamAsciiCharSet( "lemonmilk", "github.com/frabbani/mygl", col,
+                                                 MyGL_vec3( 0.4f, 0.0f, -2.3f ), MyGL_vec2( 0.1f, 0.1f ), 0.01f );
+  MyGL_drawStreaming( "Position, Color, UV0" );
   SDL_GL_SwapBuffers();
 }
 
