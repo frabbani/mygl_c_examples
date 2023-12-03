@@ -1,12 +1,9 @@
 #include "camera.h"
+#include "defs.h"
 
-#include <mygl.h>
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-function"
 #include <vecdefs.h>
-#pragma GCC diagnostic pop
-#include "math.h"
+
+#define CLAMP(a,min,max){ if( (a) < (min) ) (a)=(min); else if( (a) > (max) ) (a)=(max); }
 
 
 void camera_move( camera_t *cam, float forward, float sideways, float upwards )

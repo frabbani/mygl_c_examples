@@ -1,6 +1,5 @@
 #pragma once
 
-//#include "defs.h"
 #include <SDL\SDL.h>
 
 

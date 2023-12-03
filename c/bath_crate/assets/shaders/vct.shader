@@ -87,7 +87,7 @@ Depth Equal ReadOnly
 
 #define TRANSFORM
 #define VTX_P_C_T0
-#include "assets/shaders/includes.glsl"
+#include "includes.glsl"
 
 vary vec4 var_c;
 vary vec4 var_t;

@@ -1,12 +1,7 @@
 #pragma once
 
-#include "defs.h"
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-function"
-#include <vecdefs.h>
-#pragma GCC diagnostic pop
+#include <mygl.h>
+//#include "defs.h"
 
 typedef struct{
   float yaw, pitch;

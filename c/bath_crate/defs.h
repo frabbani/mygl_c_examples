@@ -4,9 +4,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#pragma GCC diagnostic ignored "-Wunused-function"
-
-
 #define PI  3.141592653589793
 #define E   2.71828183
 #define TOL (1e-5)

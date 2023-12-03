@@ -8,24 +8,18 @@
 #include <GL/glew.h>
 #include <mygl.h>
 #include <strn.h>
-
-
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-variable"
-#pragma GCC diagnostic ignored "-Wunused-function"
 #include <vecdefs.h>
-#pragma GCC diagnostic pop
+#include <math.h>
 
 
 #include "mysdl.h"
+#include "defs.h"
 #include "bitmap.h"
 #include "filestream.h"
 #include "obj.h"
 #include "camera.h"
 #include "font.h"
 
-#include <math.h>
-const float pi = 3.141592653589793238f;
 
 MYGLSTRNFUNCS(64)
 
@@ -81,9 +75,9 @@ void myprint( const char *str ){
 void create_vbo_from_obj( WaveFront_obj_t *obj, const char *alias ){
 
    MyGL_VertexAttrib attribs[] = {
-       { MYGL_FLOAT, MYGL_XYZW, GL_FALSE },
-       { MYGL_FLOAT, MYGL_XYZW, GL_FALSE },
-       { MYGL_FLOAT, MYGL_XYZW, GL_FALSE },
+       { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE },
+       { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE },
+       { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE },
    };
 
    const char *name = alias ? alias : obj->name;
@@ -113,8 +107,8 @@ void create_vbo_from_obj( WaveFront_obj_t *obj, const char *alias ){
 
 void create_water_vbo(){
   MyGL_VertexAttrib attribs[] = {
-      { MYGL_FLOAT, MYGL_XYZW, GL_FALSE },
-      { MYGL_FLOAT, MYGL_XYZW, GL_FALSE },
+      { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE },
+      { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE },
   };
   MyGL_createVbo( "water", 6, attribs, 2 );
 
@@ -190,11 +184,11 @@ SDL_bool MySDL_init(){
   MyGL_loadShader( file_stream_get_char, &shader, shader.file );
 
   MyGL_Image tex_image = BMP_init_image( "assets/crate.bmp" );
-  MyGL_createTexture2D( "Crate Texture", MyGL_roImage( tex_image ), "rgb10a2", GL_TRUE, GL_TRUE, GL_TRUE );
+  MyGL_createTexture2D( "Crate Texture", MYGL_ROIMAGE( tex_image ), "rgb10a2", GL_TRUE, GL_TRUE, GL_TRUE );
   MyGL_imageFree( &tex_image );
 
   tex_image = BMP_init_image( "assets/floor.bmp" );
-  MyGL_createTexture2D( "Floor Texture", MyGL_roImage( tex_image ), "rgb10a2", GL_TRUE, GL_TRUE, GL_FALSE );
+  MyGL_createTexture2D( "Floor Texture", MYGL_ROIMAGE( tex_image ), "rgb10a2", GL_TRUE, GL_TRUE, GL_FALSE );
   MyGL_imageFree( &tex_image );
 
 
@@ -325,7 +319,6 @@ void MySDL_draw(){
 
   mygl->samplers[0] = MyGL_str64( "lemonmilk" );
   MyGL_bindSamplers();
-  mygl->W_matrix = MyGL_mat4World( MyGL_vec3( -1.5f, 1.0f, 1.5f ), MyGL_vec3R, MyGL_vec3L , MyGL_vec3U );
 
   mygl->W_matrix = MyGL_mat4Identity;
   mygl->V_matrix = MyGL_mat4Identity;

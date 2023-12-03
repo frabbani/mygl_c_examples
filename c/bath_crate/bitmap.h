@@ -1,6 +1,5 @@
 #pragma once
 
-#include "defs.h"
 #include <mygl.h>
 
 #define BI_RGB        0
