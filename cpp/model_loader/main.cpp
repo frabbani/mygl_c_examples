@@ -12,7 +12,7 @@
 #include <public/vecdefs.h>
 #include <public/strn.h>
 #include <public/text.h>
-#include <mysdl2.h>
+#include <mysdl2.h> // https://github.com/frabbani/mysdl2
 
 MYGLSTRNFUNCS(64)
 
@@ -83,16 +83,14 @@ struct Image : public MyGL_Image {
   }
   Image(const char *bitmapFile) {
     FileData fd(bitmapFile);
-    auto image = MyGL_imageFromBMPData(fd.data.data(), fd.data.size(),
-                                       fd.name.c_str());
+    auto image = MyGL_imageFromBMPData(fd.data.data(), fd.data.size(), fd.name.c_str());
     w = image.w;
     h = image.h;
     pixels = image.pixels;
   }
 
   Image(const std::vector<uint8_t> &bitmapData, const char *source = "?") {
-    auto image = MyGL_imageFromBMPData(bitmapData.data(), bitmapData.size(),
-                                       source);
+    auto image = MyGL_imageFromBMPData(bitmapData.data(), bitmapData.size(), source);
     w = image.w;
     h = image.h;
     pixels = image.pixels;
@@ -119,8 +117,7 @@ struct Image : public MyGL_Image {
 struct AsciiCharSet : public MyGL_AsciiCharSet {
 
   AsciiCharSet(const char *name) {
-    Image(MyGL_str64Fmt("assets/fonts/%s/glyphs.bmp", name).chars).move(
-        &imageAtlas);
+    Image(MyGL_str64Fmt("assets/fonts/%s/glyphs.bmp", name).chars).move(&imageAtlas);
     this->name = MyGL_str64(name);
     if (!imageAtlas.pixels) {
       printf("failed to load font '%s' bitmap\n", name);
@@ -133,8 +130,7 @@ struct AsciiCharSet : public MyGL_AsciiCharSet {
       chars[i].x = chars[i].y = chars[i].w = chars[i].h = 0.0f;
     }
 
-    FILE *fp = fopen(MyGL_str64Fmt("assets/fonts/%s/glyphs.txt", name).chars,
-                     "r");
+    FILE *fp = fopen(MyGL_str64Fmt("assets/fonts/%s/glyphs.txt", name).chars, "r");
     if (!fp)
       return;
     char line[256];
@@ -142,8 +138,7 @@ struct AsciiCharSet : public MyGL_AsciiCharSet {
       if (line[0] >= ' ' && line[0] <= '~') {
         int i = numChars;
         chars[i].c = line[0];
-        sscanf(&line[2], "%u %u %u %u", &chars[i].w, &chars[i].h, &chars[i].x,
-               &chars[i].y);
+        sscanf(&line[2], "%u %u %u %u", &chars[i].w, &chars[i].h, &chars[i].x, &chars[i].y);
 //        printf("'%c' %u x %u < %u , %u >\n", chars[i].c, chars[i].w, chars[i].h,
 //               chars[i].x, chars[i].y);
         numChars++;
@@ -200,8 +195,7 @@ struct Mesh {
     while (fgets(line, sizeof(line), fp)) {
       if ('v' == line[0] && ' ' == line[1]) {
         float fs[8];
-        sscanf(&line[2], "%f,%f,%f %f,%f,%f %f,%f", &fs[0], &fs[1], &fs[2],
-               &fs[3], &fs[4], &fs[5], &fs[6], &fs[7]);
+        sscanf(&line[2], "%f,%f,%f %f,%f,%f %f,%f", &fs[0], &fs[1], &fs[2], &fs[3], &fs[4], &fs[5], &fs[6], &fs[7]);
         Vertex v;
         v.p = MyGL_vec4(fs[0], fs[1], fs[2], 1.0f);
         v.t = MyGL_vec2(fs[6], fs[7]);
@@ -232,8 +226,7 @@ struct Mesh {
 
       } else if ('v' == line[0] && ' ' == line[1] && index >= 0) {
         MyGL_Vec3 p, n;
-        sscanf(&line[2], "%f,%f,%f %f,%f,%f", &p.x, &p.y, &p.z, &n.x, &n.y,
-               &n.z);
+        sscanf(&line[2], "%f,%f,%f %f,%f,%f", &p.x, &p.y, &p.z, &n.x, &n.y, &n.z);
         animations.back()[count++] = p;
       }
     }
@@ -264,8 +257,7 @@ void init() {
   mygl->stencil.on = GL_FALSE;
   MyGL_resetStencil();
 
-  mygl->clearColor = MyGL_vec4Scale(MyGL_vec4(0.0757f, 0.075f, 0.122f, 1.0f),
-                                    1.5);
+  mygl->clearColor = MyGL_vec4Scale(MyGL_vec4(0.0757f, 0.075f, 0.122f, 1.0f), 1.5);
   mygl->clearDepth = 1.0f;
 
   auto makeCbParam = [=](const char *filename) {
@@ -294,6 +286,7 @@ void init() {
   printf("---------\n");
 
   MyGL_Debug_setChatty(GL_TRUE);
+
   auto loadFont = [=](const char *name) {
     AsciiCharSet charSet(name);
     MyGL_loadAsciiCharSet(dynamic_cast<MyGL_AsciiCharSet*>(&charSet), GL_TRUE,
@@ -305,8 +298,7 @@ void init() {
 
   Mesh mesh("assets/models/ranger");
   numPrimitives = mesh.triangles.size() * 3;
-  MyGL_VertexAttrib attribs[] = { { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE }, {
-      MYGL_VERTEX_FLOAT, MYGL_XY, GL_FALSE }, };
+  MyGL_VertexAttrib attribs[] = { { MYGL_VERTEX_FLOAT, MYGL_XYZW, GL_FALSE }, { MYGL_VERTEX_FLOAT, MYGL_XY, GL_FALSE }, };
   MyGL_createVbo("Ranger", mesh.vertices.size(), attribs, 2);
   {
     MyGL_VboStream stream = MyGL_vboStream("Ranger");
@@ -330,12 +322,10 @@ void init() {
   }
   if (mesh.animations.size()) {
     maxFrames = mesh.animations.size();
-    printf("# of animations / vertices per: %zu / %zu\n",
-           mesh.animations.size(), mesh.animations.front().size());
+    printf("# of animations / vertices per: %zu / %zu\n", mesh.animations.size(), mesh.animations.front().size());
     int i = 0;
     for (const auto &frame : mesh.animations) {
-      std::string name = std::string("Ranger") + std::string("/Frame")
-          + std::to_string(i++);
+      std::string name = std::string("Ranger") + std::string("/Frame") + std::to_string(i++);
       MyGL_createTbo(name.c_str(), mesh.vertices.size(), MYGL_XYZ);
       auto stream = MyGL_tboStream(name.c_str());
       int j = 0;
@@ -349,8 +339,7 @@ void init() {
   }
 
   Image image("assets/models/ranger/skin0.bmp");
-  MyGL_createTexture2D("Ranger/Skin0", image.ro(), "rgb10a2", GL_TRUE, GL_TRUE,
-  GL_TRUE);
+  MyGL_createTexture2D("Ranger/Skin0", image.ro(), "rgb10a2", GL_TRUE, GL_TRUE, GL_TRUE);
 
   MyGL_Debug_setChatty(GL_FALSE);
 
@@ -378,8 +367,7 @@ void step() {
   frames[0] = frameTable[int(frameTime) % frameTable.size()];
   frames[1] = frameTable[(int(frameTime) + 1) % frameTable.size()];
 
-  auto uniform = MyGL_findUniform("Vertex Position and Texture (Animated)",
-                                  "Main", "lerpValue");
+  auto uniform = MyGL_findUniform("Vertex Position and Texture (Animated)", "Main", "lerpValue");
   if (uniform.value && uniform.info.type == MYGL_UNIFORM_FLOAT) {
     uniform.value->floa = lerp;
   }
@@ -405,23 +393,17 @@ void draw() {
     MyGL_Vec3 u = MyGL_vec3U;
     l = MyGL_vec3Rotate(l, r, 90.0f * M_PI / 180.0f);
     u = MyGL_vec3Rotate(u, r, 90.0f * M_PI / 180.0f);
-    return MyGL_mat4Multiply(
-        Y, MyGL_mat4World(MyGL_vec3(0.0f, 0.0f, 0.0f), r, l, u));
+    return MyGL_mat4Multiply(Y, MyGL_mat4World(MyGL_vec3(0.0f, 0.0f, 0.0f), r, l, u));
   };
 
   mygl->material = MyGL_str64("Vertex Position and Texture (Animated)");
   mygl->W_matrix = transform();
-  mygl->V_matrix = MyGL_mat4View(MyGL_vec3(0.0f, -95.0f, 8.0f), MyGL_vec3R,
-                                 MyGL_vec3L, MyGL_vec3U);
-  mygl->P_matrix = MyGL_mat4Perspective((float) DISP_W / (float) DISP_H,
-                                        75.0f * 3.14159265f / 180.0f, 0.01f,
-                                        1000.0f);
+  mygl->V_matrix = MyGL_mat4View(MyGL_vec3(0.0f, -95.0f, 8.0f), MyGL_vec3R, MyGL_vec3L, MyGL_vec3U);
+  mygl->P_matrix = MyGL_mat4Perspective((float) DISP_W / (float) DISP_H, 75.0f * 3.14159265f / 180.0f, 0.01f, 1000.0f);
   mygl->samplers[0] = MyGL_str64("Ranger/Skin0");
 
-  mygl->samplers[1] = MyGL_str64(
-      (std::string("Ranger/Frame") + std::to_string(frames[0])).c_str());
-  mygl->samplers[2] = MyGL_str64(
-      (std::string("Ranger/Frame") + std::to_string(frames[1])).c_str());
+  mygl->samplers[1] = MyGL_str64((std::string("Ranger/Frame") + std::to_string(frames[0])).c_str());
+  mygl->samplers[2] = MyGL_str64((std::string("Ranger/Frame") + std::to_string(frames[1])).c_str());
   MyGL_bindSamplers();
   MyGL_drawIndexedVbo("Ranger", "Ranger", MYGL_TRIANGLES, numPrimitives);
 
@@ -434,9 +416,7 @@ void draw() {
   MyGL_bindSamplers();
   MyGL_Color color = MyGL_Color { .r = 247, .g = 211, .b = 139, .a = 255 };
   mygl->primitive = MYGL_QUADS;
-  mygl->numPrimitives = MyGL_streamAsciiCharSet(
-      "quake", "Q RANGER Q", color, MyGL_vec3(-1.2f, 1.0f, 1.5f),
-      MyGL_vec2(0.3f, 0.3f * DISP_W / DISP_H), 0.0f);
+  mygl->numPrimitives = MyGL_streamAsciiCharSet("quake", "Q RANGER Q", color, MyGL_vec3(-1.2f, 1.0f, 1.5f), MyGL_vec2(0.3f, 0.3f * DISP_W / DISP_H), 0.0f);
   MyGL_drawStreaming("Position, Color, UV0");
 
   /* write my info */
@@ -447,16 +427,9 @@ void draw() {
   MyGL_bindSamplers();
   color.value = 0xff535b95;
   mygl->primitive = MYGL_QUADS;
-  mygl->numPrimitives = MyGL_streamAsciiCharSet("lemonmilk",
-                                                "www.youtube.com/faisal_who",
-                                                color,
-                                                MyGL_vec3(0.62f, 0.35f, -2.1f),
-                                                MyGL_vec2(0.07f, 0.07f), 0.01f);
+  mygl->numPrimitives = MyGL_streamAsciiCharSet("lemonmilk", "www.youtube.com/faisal_who", color, MyGL_vec3(0.62f, 0.35f, -2.1f), MyGL_vec2(0.07f, 0.07f), 0.01f);
   MyGL_drawStreaming("Position, Color, UV0");
-  mygl->numPrimitives = MyGL_streamAsciiCharSet("lemonmilk",
-                                                "github.com/frabbani", color,
-                                                MyGL_vec3(0.9f, 0.0f, -2.3f),
-                                                MyGL_vec2(0.07f, 0.07f), 0.01f);
+  mygl->numPrimitives = MyGL_streamAsciiCharSet("lemonmilk", "github.com/frabbani", color, MyGL_vec3(0.9f, 0.0f, -2.3f), MyGL_vec2(0.07f, 0.07f), 0.01f);
   MyGL_drawStreaming("Position, Color, UV0");
 
 }
@@ -500,8 +473,7 @@ int main(int argc, char *args[]) {
   }
   term();
   if (drawCount)
-    printf("Average draw time: %f ms\n",
-           (float) ((drawTimeInSecs * 1e3) / (double) drawCount));
+    printf("Average draw time: %f ms\n", (float) ((drawTimeInSecs * 1e3) / (double) drawCount));
 
   sdl.term();
   printf("goodbye!\n");
