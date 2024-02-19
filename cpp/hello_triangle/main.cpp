@@ -8,6 +8,7 @@
 #include <vector>
 #include <memory>
 #include <functional>
+#include <mutex>
 
 #include <mygl/public/mygl.h>
 #include <mygl/public/vecdefs.h>
@@ -27,6 +28,8 @@ MyGL *mygl = nullptr;
 
 void log( const char *str ){
   static bool first = true;
+  static std::mutex m;
+  std::lock_guard<std::mutex> l(m);
   if( first ){
     printf( "********************************************************\n");
     printf( "********************************************************\n");

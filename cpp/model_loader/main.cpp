@@ -2,11 +2,14 @@
 #include <cstdlib>
 #include <cstdarg>
 #include <cstring>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <memory>
 #include <functional>
+#include <mutex>
 
 #include <public/mygl.h>
 #include <public/vecdefs.h>
@@ -30,6 +33,8 @@ uint32_t frames[2];
 
 void log(const char *str) {
   static bool first = true;
+  static std::mutex m;
+  std::lock_guard<std::mutex> l(m);
   if (first) {
     printf("********************************************************\n");
     printf("********************************************************\n");
